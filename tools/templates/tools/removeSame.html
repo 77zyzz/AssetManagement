@@ -1,0 +1,68 @@
+
+<!doctype html>
+<html lang="zh">
+  <head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>文本去重!</title>
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+
+  </head>
+  <body>
+      
+    <div><input type="button" onclick="process()" value="去重处理" class="bt-green"></div>
+    <textarea cols="50" rows="20" id="list" class="toolarea"></textarea>
+    <script>  //根据textarea 标签内容自适应高度  
+        function unique(ary) {
+            var i = 0,
+                gid = '_' + (+new Date) + Math.random(),
+                objs = [],
+                hash = {
+                    'string': {},
+                    'boolean': {},
+                    'number': {}
+                },
+                p, l = ary.length,
+                ret = [];
+            for (; i < l; i++) {
+                p = ary[i];
+                if (p == null) continue;
+                tp = typeof p;
+                if (tp in hash) {
+                    if (!(p in hash[tp])) {
+                        hash[tp][p] = 1;
+                        ret.push(p);
+                    }
+                } else {
+                    if (p[gid]) continue;
+                    p[gid] = 1;
+                    objs.push(p);
+                    ret.push(p);
+                }
+            }
+            for (i = 0, l = objs.length; i < l; i++) {
+                p = objs[i];
+                p[gid] = undefined;
+                delete p[gid];
+            }
+            return ret;
+        }
+
+        function process() {
+            list = document.getElementById('list');
+            arr = list.value.split('\n');
+            arr = unique(arr);
+            list.value = "";
+            for (key in arr) {
+                list.value += arr[key] + '\n';
+            }
+            alert("处理完成！");
+        } 
+    </script>
+    
+    <!-- 引入 layui.js -->
+    <script src="{% static 'layui/layui.js' %}"></script>
+  </body>
+</html>
